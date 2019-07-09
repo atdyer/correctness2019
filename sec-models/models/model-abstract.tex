@@ -1,0 +1,17 @@
+\begin{myquote}\small{\texttt{\\
+\Bsig Matrix \{\\
+\TA  nrows, ncols: \Bint,\\
+\TA  values: \Bint~$\rightarrow$~\Bint~$\rightarrow$~Value\\
+\} \{\\
+\TA nrows $\geq$ 0\\
+\TA ncols $\geq$ 0\\
+\TA \Ball i, j: \Bint~$|$\\
+\TB i $\rightarrow$ j \Bin values.univ \Bimplies\\
+\TC 0 $\leq$ i \Band i $<$ nrows \Band\\
+\TC 0 $\leq$ j \Band j $<$ ncols\\
+\TA \Blet nvals = mul[nrows, ncols] $|$\\
+\TB \#values = nvals \Band\\
+\TB \#values.univ = nvals\\
+\}
+}}
+\end{myquote}

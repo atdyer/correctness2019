@@ -1,0 +1,16 @@
+\begin{myquote}
+\Bassert inPlace \{\\
+\TA \Ball e: ELL, kpos: \Bseqint \{\\
+\TB repInv[e] \Band genkpos[e, kpos] \Bimplies \{\\
+\TC \Ball i: rowInds[e] \{\\
+\TD \Ball k: indices[e.maxnz] \{\\
+\TE \Blet idx = i.mul[e.maxnz].add[k] $|$\\
+\TF kpos[idx] $\leq$ idx\\
+\TD \}\\
+\TC \}\\
+\TB \}\\
+\TA \}\\
+\}\\
+\Bcheck inPlace\\
+\TA \Bfor 5 \Bint, 15 \Bseq, 0 Matrix, 1 ELL, 0 CSR, 2 Value
+\end{myquote}

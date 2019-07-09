@@ -1,0 +1,14 @@
+\begin{myquote}
+\Bpred MVM [C: CSR, x, b: Matrix] \{\\
+% \TA C.rows = b.rows\\
+% \TA C.cols = x.rows\\
+% \TA x.cols = 1\\
+% \TA b.cols = 1\\
+% \TA SumProd \Bnot \Bin C.A.elems\\
+% \TA SumProd \Bnot \Bin x.values[\Buniv][\Buniv]\\
+\TA \ldots\\
+\TA \Ball i: rowInds[C] $|$\\
+\TB \Blet row = getrow[C, i] $|$\\
+\TC dotProd[row, x, b.values[i][0]]\\
+\}
+\end{myquote}

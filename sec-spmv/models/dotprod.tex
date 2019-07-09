@@ -1,0 +1,9 @@
+\begin{myquote}
+\Bpred dotProd [row: \Bint$\rightarrow$Value, x: Matrix, b: SumProd] \\
+\{\\
+\TA \Ball col: row.\Buniv\ $|$\\
+\TB b.values[col] = row[col]$\rightarrow$x.values[col][0]\\
+\TA \Ball col: \Bint - row.\Buniv\ $|$\\
+\TB \Bno b.values[col]\\
+\}
+\end{myquote}

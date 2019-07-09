@@ -1,0 +1,47 @@
+\begin{myquote}
+\Bpred genkpos [e: ELL, kpos: \Bseqint] \{\\
+\TA kpos[0] = 0\\
+\TA \#kpos = e.rows.mul[e.maxnz].add[1]\\
+\TA \Ball i: rowInds[e] \{\\
+\TB \Ball k: indices[e.maxnz] \{\\
+\TC \Blet it = i.mul[e.maxnz].add[k]\{\\
+\TD rowcols[e, i][k] != -1 \Bimplies\{\\
+\TE it $<$ kpos.lastIdx \Bimplies\\
+\TF kpos[it.add[1]] = kpos[it].add[1]\\
+\TD \} \Belse \{\\
+\TE it $<$ kpos.lastIdx \Bimplies\\
+\TF kpos[it.add[1]] = kpos[it]\\
+\TD \}\\
+\TC \}\\
+\TB \}\\
+\TA \}\\
+\}\\
+\Bpred ellcsr [e: ELL, c: CSR] \{\\
+\TA e.rows = c.rows\\
+\TA e.cols = c.cols\\
+\TA c.IA[0] = 0\\
+\TA \#c.IA = c.rows.add[1]\\
+\TA \Bsome kpos: \Bseqint \{\\
+\TB genkpos[e, kpos]\\
+\TB \#c.A = kpos.last\\
+\TB \#c.JA = kpos.last\\
+\TB \Ball i: rowInds[e] \{\\
+\TC \Ball k: indices[e.maxnz] \{\\
+\TD rowcols[e, i][k] != -1 \Bimplies\\
+\TD \Blet kp = kpos[i.mul[e.maxnz].add[k]] \{\\
+\TE c.A[kp] = rowvals[e, i][k]\\
+\TE c.JA[kp] = rowcols[e, i][k]\\
+\TD \}\\
+\TC \}\\
+\TC c.IA[i.add[1]] = kpos[i.add[1].mul[e.maxnz]]\\
+\TB \}\\
+\TA \}\\
+\}\\
+\Bassert transValid \{\\
+\TA \Ball e: ELL, c: CSR, m: Matrix $|$\\
+\TB repInv[e] \Band alpha[e, m] \Band ellcsr[e, c] \Bimplies\\
+\TC repInv[c] \Band alpha[c, m]\\
+\}\\
+\Bcheck transValid\\
+\TA \Bfor 4 \Bint, 7 \Bseq, 1 Matrix, 1 ELL, 1 CSR, 2 Value\\
+\end{myquote}

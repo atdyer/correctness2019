@@ -1,0 +1,22 @@
+\SetStartEndCondition{ }{}{}
+\SetKwProg{Fn}{def}{\string:}{}
+\SetKwFunction{Range}{range}
+\SetKw{KwTo}{in}\SetKwFor{For}{for}{\string:}{}
+\SetKwIF{If}{ElseIf}{Else}{if}{:}{elif}{else:}{}
+\SetKwFor{While}{while}{:}{fintq}
+\newcommand{\forcond}[2]{$#1$ \KwTo\Range{$#2$}}
+\SetAlgoNoEnd
+\DontPrintSemicolon
+kpos = 0\;
+\For{\forcond{i}{nrows}}{
+  \For{\forcond{k}{maxnz}}{
+    idx = $i * maxnz + k$\;
+    \If{\textnormal{cols[idx] != -1}}{
+      vals[kpos] = vals[idx]\;
+      cols[kpos] = cols[idx]\;
+      kpos = kpos + 1\;
+    }
+  }
+  IA[$i+1$] = kpos\;
+}
+\BlankLine

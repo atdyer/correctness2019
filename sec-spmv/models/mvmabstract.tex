@@ -1,0 +1,13 @@
+\begin{myquote}
+\Bpred MVM [A, x, b: Matrix] \{\\
+% \TA A.rows = b.rows\\
+% \TA A.cols = x.rows\\
+% \TA x.cols = 1\\
+% \TA b.cols = 1\\
+% \TA SumProd \Bnot \Bin A.values[\Buniv][\Buniv]\\
+% \TA SumProd \Bnot \Bin x.values[\Buniv][\Buniv]\\
+\TA \ldots\\
+\TA \Ball i: rowInds[A] $|$\\
+\TB dotProd[A.values[i], x, b.values[i][0]]\\
+\}
+\end{myquote}

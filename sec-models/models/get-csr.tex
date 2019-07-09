@@ -1,0 +1,16 @@
+\begin{myquote}\small{\texttt{\\
+\Bfun get [c: CSR, row, col: Int]: Value \{
+\TA let a = c.IA[row],\\
+\TC b = c.IA[add[row, 1]] \{\\
+\TB (\Bno a \Bor \Bno b \Bor a = b) \Bimplies Zero\\
+\TB \Belse \{\\
+\TC \Blet j = c.JA.subseq[a, sub[b, 1]],\\
+\TE v = c.A.subseq[a, sub[b, 1]],\\
+\TE i = j.idxOf[col] \{\\
+\TD \Bno i \Bimplies Zero \Belse v[i]\\
+\TC \}\\
+\TB \}\\
+\TA \}\\
+\}
+}}
+\end{myquote}

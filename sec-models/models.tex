@@ -1,0 +1,173 @@
+\section{Sparse Matrix Models}
+
+In this section we introduce some basic modeling elements used throughout the study, and then we describe four models.  First we describe an abstract model of a matrix that does not represent any specific data format, leaving out all implementation details and notions of sparsity. Then we describe three refinements of this model which introduce structure that supports a sparse representation: the DOK format, the ELL format, and the CSR format.  For each matrix representation we model initialization, update, and matrix-vector multiplication.  For each refinement, we provide representation invariants and abstraction functions to show that the refinement is sound.
+
+By design, Alloy provides no means of working with floating point values.  It includes integers, but in a limited scope, and so they are not useful when attempting to work with the complete integer set, as might be the case when considering values that could be stored in a sparse matrix.  This is inconsequential, however, as we only aim to reason about the structural complexities of sparse matrix formats.  Therefore, it is sufficient to create an abstract distinction between zero and non-zero values.  Our models employ a Value signature, representing any numerical value, and a Zero signature, an extension of Value, that represents the value zero.  Depending on the scope, this creates an abstract set of values, shown in \figurename~\ref{fig:values}, that we can use to populate matrices in our models.
+
+\begin{figure}
+\begin{displaymath}
+Value = \{Zero, Value_0, Value_1, \ldots, Value_n\}
+\end{displaymath}
+\caption{The set of abstract values.}
+\label{fig:values}
+\end{figure}
+
+Throughout these models we make use of predicate overloading to define various predicates that can be applied universally.  Overloading is enabled by Alloy's type system and type checker, which allow expressions to share a name as long as there is no ambiguity when resolving types.  For example, the \texttt{rowInRange} and \texttt{colInRange} predicates are used to determine if a row or column index is within the bounds of some matrix.  The predicate definitions for the three sparse matrix types considered in this study are shown in \figurename~\ref{fig:overload}.  The \texttt{rowInRange} predicate evaluates to true if the value \texttt{row} is greater than or equal to zero and less than the number of rows in, for example, the DOK matrix \texttt{d}, false otherwise.  Similarly, the \texttt{colInRange} predicate evaluates to true if the value \texttt{col} is greather than or equal to zero and less than the number of columns in the DOK matrix \texttt{d}.  Additional usage of overloading found in these models includes the representation invariant, which is always named \texttt{repInv}, and the abstraction function, which is always named \texttt{alpha}.
+
+\begin{figure}
+\centering
+\begin{myquote}\small{\texttt{\\
+\Bpred rowInRange[d: DOK, row: Int] \{\ldots\}\\
+\Bpred rowInRange[e: ELL, row: Int] \{\ldots\}\\
+\Bpred rowInRange[c: CSR, row: Int] \{\ldots\}\\
+\Bpred colInRange[d: DOK, col: Int] \{\ldots\}\\
+\Bpred colInRange[e: ELL, col: Int] \{\ldots\}\\
+\Bpred colInRange[c: CSR, col: Int] \{\ldots\}\\
+}}
+\end{myquote}
+\caption{Predicate overloading of \texttt{rowInRange} and \texttt{colInRange}.}
+\label{fig:overload}
+\end{figure}
+
+\subsection{Abstract Sparse Matrix}
+
+We begin with an abstract model of a two-dimensional mathematical matrix, sparse or otherwise, defined by the Matrix signature as shown in \figurename~\ref{model:abstract}.  There are three fields defined on the Matrix signature representing (1) the number of rows in the matrix, (2) the number of columns in the matrix, and (3) the values and their locations in the matrix.  This model makes no assumptions about the contents or structure of the matrix, and will be the arbiter of correctness when determining if a refinement is sound.
+
+\begin{figure}
+\centering
+\input{models/model-abstract.tex}
+\caption{The abstract matrix model.}
+\label{model:abstract}
+\end{figure}
+
+The representation invariant is specified as a signature fact so that it is applied to every member of the Matrix signature.  The representation invariant states that (1) the number of rows and columns in a matrix are each greater than or equal to zero, (2) all row, column indices fall within bounds, (3) the total number of values in the matrix is $\texttt{rows}\times\texttt{cols}$, and (4) there is a value at every $\left(i, j\right)$ index pair.
+
+\subsubsection{Matrix Initialization}
+
+\begin{figure}
+\centering
+\input{models/init-abstract.tex}
+\caption{The abstract matrix initialization.}
+\label{init:abstract}
+\end{figure}
+
+The \texttt{init} predicate shown in \figurename~\ref{init:abstract} is used to initialize an empty matrix.  We consider the initialized state of a matrix to be one in which the number of rows and columns is defined and all values are zero.
+
+\subsubsection{Matrix Update}
+
+\begin{figure}
+\centering
+\input{models/update-abstract.tex}
+\caption{The abstract matrix update.}
+\label{update:abstract}
+\end{figure}
+
+The \texttt{update} predicate shown in \figurename~\ref{update:abstract} is used to perform an update.  We consider a matrix update to be a transition in which a single value of a matrix is changed and the matrix does not change size.  For all matrices, this includes four possible transitions: non-zero to non-zero, non-zero to zero, zero to non-zero, and zero to zero, or stutter.
+
+\subsection{DOK Format}
+
+The dictionary of keys (DOK) format uses a dictionary, or associative array, to store key, value pairs.  An associative array is a collection of key, value pairs in which each possible key may appear only once.  Sparse matrices are stored such that pairs of row, column indices are used as keys to reference stored values.  The DOK format is frequently used~\cite{scipy, eigenweb2010} in the assembly of sparse matrices because of the efficient \(\mathcal{O}(1)\) access to individual elements provided by the associative array format.  However, because associative arrays make no guarantees about memory locality, iterating over all values in the matrix can be inefficient.  As a result, it is common to use this format to incrementally assemble the full matrix and convert it to another sparse matrix format that allows for more efficient operations on matrices.
+
+The DOK signature, shown in \figurename~\ref{model:dok}, resembles the Matrix signature.  The \texttt{nrows} field represents the integer number of rows in the matrix and the \texttt{ncols} field represents the integer number of columns in the matrix.  The \texttt{dict} field represents the dictionary of key, value pairs.  It takes the same form as the values field of the Matrix signature, but the \(\Bint \to \Bint\) relation represents integer pairs used as keys in the dictionary.
+
+\begin{figure}
+\centering
+\input{models/model-dok.tex}
+\caption{The DOK Model.}
+\label{model:dok}
+\end{figure}
+
+\subsubsection{Representation Invariant}
+
+The representation invariant for the DOK format, shown in \figurename~\ref{repinv:dok}, states that (1) there are no zeros stored as values, (2) all row, column indices used as keys fall within the bounds of the matrix, and (3) all row, column indices that fall within the bounds of the matrix may appear at most once as keys in the dictionary.
+
+\begin{figure}
+\centering
+\input{models/repinv-dok.tex}
+\caption{The DOK representation invariant.}
+\label{repinv:dok}
+\end{figure}
+
+\subsubsection{Abstraction Function}
+
+The abstraction function provides a mapping from the DOK representation of a matrix to our abstract representation of a matrix.  The \texttt{alpha} predicate, shown in \figurename~\ref{alpha:dok}, states that the DOK matrix $d$ is a refinement of Matrix $m$ if (1) $d$ has the same number of rows and columns as $m$, (2) all row, column index pairs that map to a value in the $d$ dictionary map to the same value at the same location in $m$, and (3) all in-range row, column pairs \emph{not} used as keys in the $d$ dictionary map to zeros in $m$.
+
+\begin{figure}
+\centering
+\input{models/alpha-dok.tex}
+\caption{The DOK abstraction function}
+\label{alpha:dok}
+\end{figure}
+
+\subsubsection{Matrix Initialization}
+
+Initialization of the DOK matrix, shown in \figurename~\ref{init:dok}, requires setting the size of the matrix and creating an empty dictionary.  Because the abstraction function maps indices that aren't included as keys to zero, an empty dictionary represents a matrix in which all values are zero.
+
+\begin{figure}
+\centering
+\input{models/init-dok.tex}
+\caption{The DOK initialization predicate.}
+\label{init:dok}
+\end{figure}
+
+\subsubsection{Matrix Update}
+
+\begin{figure}
+\centering
+\input{models/update-dok.tex}
+\caption{The DOK update predicate.}
+\label{update:dok}
+\end{figure}
+
+\subsubsection{SpMV}
+
+\subsection{ELL Format}
+
+ELL, coming soon.
+
+\subsection{CSR Format}
+
+The Compressed Sparse Row (CSR) format, shown in \figurename~\ref{image:csr}, uses three arrays to store a sparse matrix, one for values and two for integers.  The value array contains non-zero values of the matrix ordered as they are traversed in a row-wise fashion.  Column indices of each value are stored in a separate array, while a third array stores the location in the values array that starts each row.  We adopt the convention that the values array is named $\mathrm{A}$, the column array is named $\mathrm{JA}$, and the row index array is name $\mathrm{IA}$.
+
+\begin{figure}
+\centering
+\input{models/image-csr.tex}
+\caption{The CSR format.}
+\label{image:csr}
+\end{figure}
+
+The CSR format, making no assumptions about the sparsity structure of the matrix, is a general format capable of compressing any sparse matrix.  The storage savings for this approach is significant, requiring $2nnz+n+1$ storage locations\footnote{where $n$ is the number of rows, $m$ is the number of columns, and $nnz$ is the number of non-zero values} rather than $n \times m$.  Memory locality is improved for row access over the DOK format, but the indirect addressing steps can have an impact on performance~\cite{bai}.
+
+\begin{figure}
+\centering
+\input{models/model-csr.tex}
+\caption{The CSR model.}
+\label{model:csr}
+\end{figure}
+
+Need to describe the ``get'' predicate and why it is needed.
+
+\begin{figure}
+\centering
+\input{models/get-csr.tex}
+\caption{The get function used in the CSR model.}
+\label{get:csr}
+\end{figure}
+
+The abstraction function:
+
+\begin{figure}
+\centering
+\input{models/alpha-csr.tex}
+\caption{The CSR abstraction function.}
+\label{alpha:csr}
+\end{figure}
+
+The representation invariant:
+
+\begin{figure}
+\centering
+\input{models/repinv-csr.tex}
+\caption{The CSR representation invariant.}
+\label{repinv:csr}
+\end{figure}

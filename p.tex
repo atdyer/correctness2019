@@ -1,0 +1,35 @@
+\documentclass[sigconf]{acmart}
+
+% \usepackage{cite}
+\usepackage{import}
+\usepackage{url}
+\usepackage{subcaption}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage[]{algorithm2e}
+
+\usetikzlibrary{matrix, fit}
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{positioning}
+\usetikzlibrary{cd}
+
+% Import Alloy syntax
+\import{util/}{alloy-lang.tex}
+
+\begin{document}
+
+\title{Sparse Matrices Correctness 2019 Paper}
+\maketitle
+
+\import{sec-intro/}{intro.tex}
+% \import{sec-alloy/}{alloy.tex}
+% \import{sec-models/}{models.tex}
+% \import{sec-trans/}{translation.tex}
+% \import{sec-spmv/}{spmv.tex}
+
+\bibliographystyle{IEEEtran}
+\bibliography{IEEEabrv,bib/sparse,bib/mybib}
+
+\end{document}

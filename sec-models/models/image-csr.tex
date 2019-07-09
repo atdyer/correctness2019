@@ -1,0 +1,59 @@
+\begin{tikzpicture}
+
+\begin{scope}[every node/.style={minimum size=0.75cm-2*\pgflinewidth, outer sep=0pt},scale=0.75]
+\draw (0,0) grid +(5,1);
+\node (ia) at (0.5, 0.5) {0};
+\node at (1.5, 0.5) {1};
+\node at (2.5, 0.5) {3};
+\node at (3.5, 0.5) {4};
+\node at (4.5, 0.5) {6};
+
+\draw(0,-1) grid +(6,-2);
+
+\node[fill=green!15] (ja) at (0.5, -1.5) {0};
+\node[fill=blue!15] at (1.5, -1.5) {1};
+\node[fill=blue!15] at (2.5, -1.5) {2};
+\node[fill=red!15] at (3.5, -1.5) {2};
+\node[fill=yellow!15] at (4.5, -1.5) {0};
+\node[fill=yellow!15] at (5.5, -1.5) {3};
+
+\node[fill=green!15] (a) at (0.5, -2.5) {4};
+\node[fill=blue!15] at (1.5, -2.5) {8};
+\node[fill=blue!15] at (2.5, -2.5) {15};
+\node[fill=red!15] at (3.5, -2.5) {16};
+\node[fill=yellow!15] at (4.5, -2.5) {23};
+\node[fill=yellow!15] at (5.5, -2.5) {42};
+
+\draw [thick,->] (0.5,0) to[out=-90, in=90] (0, -1.0);
+\draw [thick,->] (1.5,0) to[out=-90, in=90] (1, -1.0);
+\draw [thick,->] (2.5,0) to[out=-90, in=90] (3, -1.0);
+\draw [thick,->] (3.5,0) to[out=-90, in=90] (4, -1.0);
+\draw [thick,->] (4.5,0) to[out=-90, in=90] (6, -1.0);
+
+\node[left = 0.25cm of ia] {$\mathrm{IA}$ (index ranges)};
+\node[left = 0.25cm of ja] {$\mathrm{JA}$ (columns)};
+\node[left = 0.25cm of a]  {$\mathrm{A}$ (values)};
+\end{scope}
+
+\matrix[
+    matrix of math nodes,
+    row sep=.5ex,
+    column sep=.5ex,
+    left delimiter=(,right delimiter=),
+    nodes={text width=.75em, text height=1.5ex, text depth=.5ex, align=center}
+    ] (m) at (1.5, 3)
+    {
+    4 & 0 & 0 & 0 \\
+    0 & 8 & 15 & 0 \\
+    0 & 0 & 16 & 0 \\
+    23 & 0 & 0 & 42 \\
+    };
+
+\begin{scope}[on background layer]
+    \node[fit=(m-1-1)(m-1-4), draw=green!15, fill=green!15] {};
+    \node[fit=(m-2-1)(m-2-4), draw=blue!15, fill=blue!15] {};
+    \node[fit=(m-3-1)(m-3-4), draw=red!15, fill=red!15] {};
+    \node[fit=(m-4-1)(m-4-4), draw=yellow!15, fill=yellow!15] {};
+\end{scope} 
+
+\end{tikzpicture}

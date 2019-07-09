@@ -1,0 +1,46 @@
+\begin{tikzpicture}
+
+\matrix (A) [
+  matrix of math nodes,
+  row sep=.5ex,
+  column sep=.5ex,
+  left delimiter={[},right delimiter={]},
+  nodes={text width=1.5em, text height=1.5ex, text depth=.5ex, align=center}
+]
+{
+  A_{00} & A_{01} & A_{02} \\
+  A_{10} & A_{11} & A_{12} \\
+  A_{20} & A_{21} & A_{22} \\
+};
+
+\node (times) [right=0.75em of A] {$\times$};
+
+\matrix (x) [
+  matrix of math nodes,
+  left delimiter=\{,
+  right delimiter=\},
+  row sep=.5ex,
+  nodes={text height=1.5ex, text depth=.5ex,}, 
+  right=of A
+] {
+  x_0\\
+  x_1\\
+  x_2\\
+};
+
+\node (eq) [right=1em of x] {$=$};
+
+\matrix (b) [
+  matrix of math nodes,
+  left delimiter=\{,
+  right delimiter=\},
+  row sep=.5ex,
+  nodes={text height=1.5ex, text depth=.5ex},
+  right=1em of eq
+] {
+  \bm{A_0 \cdot x_0}\\
+  A_1 \bm{\cdot} x_1\\
+  A_2 \bm{\cdot} x_2\\
+};
+
+\end{tikzpicture}

@@ -1,0 +1,11 @@
+\begin{myquote}
+\Bpred valEqv [x, y: Value] \{\\
+\TA (x = y)\\
+\TA \Bor (x \Bin SumProd \Band isZero[x] \Band y = Zero)\\
+\TA \Bor (y \Bin SumProd \Band isZero[y] \Band x = Zero)\\
+\TA \Bor (isZero[x] \Band isZero[y])\\
+\TA \Bor (x \Bin SumProd \Band\\
+\TB \ y \Bin SumProd \Band\\
+\TB \ removeZeros[x] = removeZeros[y])\\
+\}
+\end{myquote}

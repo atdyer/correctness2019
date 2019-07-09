@@ -1,0 +1,11 @@
+\begin{myquote}\small{\texttt{\\
+\Bpred alpha [c: CSR, m: Matrix] \{\\
+\TA m.nrows = c.nrows\\
+\TA m.ncols = c.ncols\\
+\TA \Ball i, j: \Bint~|\\
+\TB rowInRange[c, i] \Band\\
+\TB colInRange[c, j] \Bimplies\\
+\TC m.values[i][j] = get[c, i, j]\\
+\}
+}}
+\end{myquote}

@@ -1,0 +1,45 @@
+\begin{myquote}\small{\texttt{\\
+\Bpred repInv [c: CSR] \{\\
+\TA Zero \Bnot \Bin y.A.elems\\
+\TA \Ball i: y.IA.rest.elems |\\
+\TB gte[i, 0] \Band\\
+\TB lte[i, mul[y.rows, y.cols]]\\
+\TA \Ball j: y.JA.elems |\\
+\TB gte[j, 0] \Band\\
+\TB lt[j, y.cols]\\
+\TA y.IA[0] = 0\\
+\TA y.IA.last = \#y.A\\
+\TA \#y.IA $>$ 1 \Bimplies\\
+\TC gt[y.IA.last, y.IA.butlast.last]\\
+\TA \#y.A = \#y.JA\\
+\TA lte[\#y.A, mul[y.rows, y.cols]]\\
+\TA lte[\#y.IA, add[y.rows, 1]]\\
+\TA \Ball i: y.IA.inds |\\
+\TB i > 0 \Bimplies\\
+\TC \Blet a = y.IA[sub[i, 1]],\\
+\TC       b = y.IA[i],\\
+\TC       n = sub[b, a] \{\\
+\TD   b $\geq$ a\\
+\TD   n $\leq$ y.cols\\
+\TD   n = \#y.JA.subseq[a, sub[b, 1]].elems\\
+\TC \}\\
+\}
+}}
+\end{myquote}
+
+% \begin{itemize}
+%   \item The integer value \(nrows \geq 0\)
+%   \item The integer value \(ncols \geq 0\)
+% 	\item There are no zeros stored as values
+% 	\item All values in IA \(\leq nrows \times ncols\)
+% 	\item All values in JA \(< ncols\)
+% 	\item The first value in IA is zero
+% 	\item The last value in IA is the length of A
+% 	\item The last value of IA is not repeated
+% 	\item A and JA are the same length
+% 	\item The max length of A is \(nrows \times ncols\)
+% 	\item The max length of IA is \(nrows + 1\)
+% 	\item The values in IA are monotonically increasing
+% 	\item The difference between any two consecutive values in IA must be \(\leq ncols\)
+% 	\item Values in JA must be unique per row
+% \end{itemize}

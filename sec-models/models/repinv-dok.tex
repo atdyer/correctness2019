@@ -1,0 +1,16 @@
+\begin{myquote}\small{\texttt{\\
+\Bpred repInv [d: DOK] \{\\
+\TA Zero \Bnot \Bin d.dict[\Buniv][\Buniv]\\
+\TA \Ball i, j: \Bint~\{\\
+\TB i$\rightarrow$j \Bin d.dict.univ \Bimplies\\
+\TC rowInRange[d, i] \Band\\
+\TC colInRange[d, j]\\
+\TA \}\\
+\TA \Ball i, j: \Bint~\{\\
+\TB rowInRange[d, i] \Band\\
+\TB colInRange[d, j] \Bimplies\\
+\TC \Blone v: Value | i$\rightarrow$j$\rightarrow$v \Bin d.dict\\
+\TA \}\\
+\}\\
+}}
+\end{myquote}

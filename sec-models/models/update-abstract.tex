@@ -1,0 +1,16 @@
+\begin{myquote}\small{\texttt{\\
+\Bpred update [m, m': Matrix,\\
+\TD row, col: \Bint,\\
+\TD val: Value] \{\\
+\TA m.rows = m'.rows\\
+\TA m.cols = m'.cols\\
+\TA rowInRange[m, row]\\
+\TA colInRange[m, col]\\
+\TA \Blet curr = m.values[row][col] |\\
+\TB m'.values =\\
+\TC m.values\\
+\TC - row$\rightarrow$col$\rightarrow$curr\\
+\TC + row$\rightarrow$col$\rightarrow$val\\
+\}
+}}
+\end{myquote}

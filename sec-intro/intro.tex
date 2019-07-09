@@ -1,0 +1,25 @@
+\section{Introduction}
+
+%Computations on sparse matrices are prevalent in scientific and engineering software.  
+Sparse matrix data formats can be used to compress large matrices with a small number of non-zero elements into a more efficient representation.  
+%The development of software that makes use of sparse matrices is a tedious and often error-prone task because of the myriad data formats and complexities involved in tuning the operations on these formats to achieve an efficient implementation.
+Scientific and engineering software that make use of sparse matrix formats are often implemented in low-level imperative languages such as C++ and Fortran.  The optimized nature of these software often means that the structural organization of sparse matrix formats and mathematical computations are heavily intertwined.  Additionally, the myriad data formats and complexities involved in tuning the operations on these formats to achieve efficient implementations means that the development of software that makes use of sparse matrices is a tedious and often error-prone task.
+
+To mitigate the introduction of errors into code during development, techniques such as unit testing and test-driven development are often employed.  These methods aim to reveal bugs by testing the individual components of a piece of software during development.  While useful, these methods are both tedious, requiring test cases to be written manually, and incomplete, meaning they are incapable of checking every scenario or combination of scenarios.
+
+In the realm of sparse matrices, 
+
+% Need to add something about how verification of sparse matrix codes is also difficult, and has only really been done by Arnold.  This is one of our major contributions: sparse matrix codes are difficult to verify (see Arnold), and the development of representation invariants for a number of formats can make this easier.  The representation invariants can be directly translated into code, and used during the development and debugging process to verify that operations on matrices never violate the representation invariants (a la Liskov).
+
+A number of approaches have been taken in order to address these issues.  Object-oriented libraries such as PETSc~\cite{petsc2019} and Eigen~\cite{eigenweb2010} provide data abstractions targeted towards specific classes of solvers.  These libraries provide templates that allow developers to assemble sparse matrices without having to address the structural complexities that a specific format may present.  These matrices can then be used in a variety of solvers, given that the format is supported.
+
+Alternatively, there is a body of research that takes the approach of designing and building compilers capable of automatically making decisions about sparse matrix formats and operations.  Some compilers~\cite{bik1995, bik1996} allow developers to work with dense matrices in code, generating a sparse matrix program at compile time.  Others~\cite{kotlyar1997} allow the user to provide the compiler with an abstract description of a sparse format, from which the compiler can make automatic optimizations in code that accesses the sparse data.
+
+We describe an approach that allows developers to reason about the inherent complexities of sparse matrix formats and operations and to determine invariants that can be used to verify implementations.
+%Rather than hiding the complexities of sparse matrix formats by providing data abstractions in code or automatic optimizations in compilers, we propose an approach that allows developers to reason about these complexities.  
+Elements of this approach include declarative modeling and automatic, push-button analysis using the Alloy Analyzer~\cite{jackson2012}, a lightweight bounded model checking tool.  Characteristics of sparse matrices, with their numerous representations and ...hard-to-get-right-implementation-details... are approached using abstraction based methods~\cite{clarke1994}, including data abstraction~\cite{dingel1995} and predicate abstraction~\cite{graf1997}, data and functional refinement~\cite{woodcock1996}, and other techniques, manually, as part of a modeling process...
+
+The benefits of this approach lie in its generality.  By using Alloy to perform the modeling and analysis, the modeler may choose the programming language that best fits their needs when transitioning from model to implementation.
+Can reason about existing software.
+Can reason about design of new sparse matrix libraries.
+Can reason about compiler design.

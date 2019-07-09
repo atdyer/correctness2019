@@ -1,0 +1,15 @@
+\begin{myquote}\small{\texttt{\\
+\Bpred alpha [d: DOK, m: Matrix] \{\\
+\TA m.rows = d.rows\\
+\TA m.cols = d.cols\\
+\TA \Ball i, j: \Bint, v: Value |\\
+\TB i$\rightarrow$j$\rightarrow$v \Bin d.dict \Bimplies\\
+\TC i$\rightarrow$j$\rightarrow$v \Bin m.values\\
+\TA \Ball i, j: Int |\\
+\TB rowInRange[d, i] and\\
+\TB colInRange[d, j] and\\
+\TB i$\rightarrow$j not in d.dict.\Buniv~\Bimplies\\
+\TC i$\rightarrow$j$\rightarrow$Zero \Bin m.values\\
+\}
+}}
+\end{myquote}

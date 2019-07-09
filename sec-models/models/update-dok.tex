@@ -1,0 +1,72 @@
+% \begin{myquote}\small{\texttt{\\
+% \Bpred ZtoZ[d, d': DOK,\\
+% \TE curr, val: Value] \{\\
+% \TA \Bno curr\\
+% \TA val = Zero\\
+% \TA d'.dict = d.dict\\
+% \}
+% }}
+% \end{myquote}
+
+% \begin{myquote}\small{\texttt{\\
+% \Bpred ZtoNZ[d, d': DOK,\\
+% \TE row, col: \Bint,\\
+% \TE curr, val: Value] \{\\
+% \TA \Bno curr\\
+% \TA val != Zero\\
+% \TA d'.dict = d.dict + row$\rightarrow$col$\rightarrow$val)\\
+% \}
+% }}
+% \end{myquote}
+
+% \begin{myquote}\small{\texttt{\\
+% \Bpred NZtoZ[d, d': DOK,\\
+% \TE row, col: \Bint,\\
+% \TE curr, val: Value] \{\\
+% \TA val = Zero\\
+% \TA d'.dict = d.dict - row$\rightarrow$col$\rightarrow$curr\\
+% \}
+% }}
+% \end{myquote}
+
+% \begin{myquote}\small{\texttt{\\
+% \Bpred NZtoNZ[d, d': DOK,\\
+% \TE row, col: \Bint,\\
+% \TE curr, val: Value] \{\\
+% \TA val != Zero\\
+% \TA d'.dict = d.dict\\
+% \TB - row$\rightarrow$col$\rightarrow$curr\\
+% \TB + row$\rightarrow$col$\rightarrow$val)\\
+% \}
+% }}
+% \end{myquote}
+
+\begin{myquote}\small{\texttt{\\
+\Bpred update [d, d': DOK,\\
+\TD row, col: \Bint,\\
+\TD val: Value] \{\\
+\TA d.rows = d'.rows\\
+\TA d.cols = d'.cols\\
+\TA rowInRange[d, row]\\
+\TA colInRange[d, col]\\
+\TA \Blet curr = d.dict[row][col] \{\\
+\TB ZtoZ[d, d', curr, val] \Bor\\
+\TB ZtoNZ[d, d', row, col, curr, val] \Bor\\
+\TB NZtoZ[d, d', row, col, curr, val] \Bor\\
+\TB NZtoNZ[d, d', row, col, curr, val]\\
+% \TB (\Bno curr \Band val != Zero \Band\\
+% \TC d'.dict = d.dict + row$\rightarrow$col$\rightarrow$val)\\
+% \TB \Bor\\
+% \TB (\Bno curr \Band val = Zero \Band\\
+% \TC d'.dict = d.dict)\\
+% \TB \Bor\\
+% \TB (val != Zero \Band d'.dict = d.dict\\
+% \TC - row$\rightarrow$col$\rightarrow$curr\\
+% \TC + row$\rightarrow$col$\rightarrow$val)\\
+% \TB \Bor\\
+% \TB (val = Zero \Band d'.dict = d.dict\\
+% \TC - row$\rightarrow$col$\rightarrow$curr)\\
+\TA\}\\
+\}
+}}
+\end{myquote}
