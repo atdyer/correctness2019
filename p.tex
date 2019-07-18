@@ -7,7 +7,6 @@
 \usepackage{mathtools}
 \usepackage{bm}
 \usepackage{tikz}
-\usepackage{listings}
 \usepackage[]{algorithm2e}
 
 \usetikzlibrary{matrix, fit}
@@ -15,7 +14,8 @@
 \usetikzlibrary{positioning}
 \usetikzlibrary{cd}
 
-% Import Alloy syntax
+% Import Alloy syntax and listings package
+\import{util/}{alloy-listings.tex}
 \import{util/}{alloy-lang.tex}
 
 \begin{document}
@@ -23,12 +23,12 @@
 \title{Sparse Matrices Correctness 2019 Paper}
 \maketitle
 
-\import{sec-intro/}{intro.tex}
-\import{sec-litrev/}{litrev.tex}
-\import{sec-alloy/}{alloy.tex}
+% \import{sec-intro/}{intro.tex}
+% \import{sec-litrev/}{litrev.tex}
+% \import{sec-alloy/}{alloy.tex}
 \import{sec-models/}{models.tex}
-\import{sec-trans/}{translation.tex}
-\import{sec-spmv/}{spmv.tex}
+% \import{sec-trans/}{translation.tex}
+% \import{sec-spmv/}{spmv.tex}
 
 \bibliographystyle{IEEEtran}
 \bibliography{IEEEabrv,bib/sparse,bib/mybib}

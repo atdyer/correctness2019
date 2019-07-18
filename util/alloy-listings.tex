@@ -1,0 +1,32 @@
+\usepackage{listings}
+\usepackage{courier}
+
+\lstdefinelanguage{alloy}{
+  basicstyle=\small\ttfamily,
+  keywords={abstract,all,and,as,assert,but,check,disj,else,exactly,extends,fact,for,fun,iden,iff,implies,in,Int,let,lone,module,no,none,not,one,open,or,pred,run,set,sig,some,sum,univ},
+  mathescape=true,
+  morecomment=[l]--,
+  morecomment=[l]//,
+  morecomment=[s]{/*}{*/},
+  literate=
+    {=}{$=$}1
+    {->}{$\rightarrow$}2
+    {=>}{$\Rightarrow$}1
+    {>}{$>$}1
+    {>=}{$\geq$}1
+    {<}{$<$}1
+    {<=}{$\leq$}1
+    {|}{$|$}1
+    {\{}{$\{$}1
+    {\}}{$\}$}1
+    {[}{$[$}1
+    {]}{$]$}1
+    {(}{$($}1
+    {)}{$)$}1
+}
+
+\lstnewenvironment{alloy}
+  {\lstset{
+  language=alloy
+  }}
+  {}

@@ -1,0 +1,56 @@
+\subsection{DOK Format}
+
+The dictionary of keys (DOK) format uses a dictionary, or associative array, to store key, value pairs.  An associative array is a collection of key, value pairs in which each possible key may appear only once.  Sparse matrices are stored such that pairs of row, column indices are used as keys to reference stored values.  The DOK format is frequently used~\cite{scipy, eigenweb2010} in the assembly of sparse matrices because of the efficient \(\mathcal{O}(1)\) access to individual elements provided by the associative array format.  However, because associative arrays make no guarantees about memory locality, iterating over all values in the matrix can be inefficient.  As a result, it is common to use this format to incrementally assemble the full matrix and convert it to another sparse matrix format that allows for more efficient operations on matrices.
+
+The DOK signature, shown in \figurename~\ref{model:dok}, resembles the Matrix signature.  The \texttt{nrows} field represents the integer number of rows in the matrix and the \texttt{ncols} field represents the integer number of columns in the matrix.  The \texttt{dict} field represents the dictionary of key, value pairs.  It takes the same form as the values field of the Matrix signature, but the \(\Bint \to \Bint\) relation represents integer pairs used as keys in the dictionary.
+
+% \begin{figure}
+% \centering
+% \input{models/model-dok.tex}
+% \caption{The DOK Model.}
+% \label{model:dok}
+% \end{figure}
+
+\subsubsection{Representation Invariant}
+
+The representation invariant for the DOK format, shown in \figurename~\ref{repinv:dok}, states that (1) there are no zeros stored as values, (2) all row, column indices used as keys fall within the bounds of the matrix, and (3) all row, column indices that fall within the bounds of the matrix may appear at most once as keys in the dictionary.
+
+% \begin{figure}
+% \centering
+% \input{models/repinv-dok.tex}
+% \caption{The DOK representation invariant.}
+% \label{repinv:dok}
+% \end{figure}
+
+\subsubsection{Abstraction Function}
+
+The abstraction function provides a mapping from the DOK representation of a matrix to our abstract representation of a matrix.  The \texttt{alpha} predicate, shown in \figurename~\ref{alpha:dok}, states that the DOK matrix $d$ is a refinement of Matrix $m$ if (1) $d$ has the same number of rows and columns as $m$, (2) all row, column index pairs that map to a value in the $d$ dictionary map to the same value at the same location in $m$, and (3) all in-range row, column pairs \emph{not} used as keys in the $d$ dictionary map to zeros in $m$.
+
+% \begin{figure}
+% \centering
+% \input{models/alpha-dok.tex}
+% \caption{The DOK abstraction function}
+% \label{alpha:dok}
+% \end{figure}
+
+\subsubsection{Matrix Initialization}
+
+Initialization of the DOK matrix, shown in \figurename~\ref{init:dok}, requires setting the size of the matrix and creating an empty dictionary.  Because the abstraction function maps indices that aren't included as keys to zero, an empty dictionary represents a matrix in which all values are zero.
+
+% \begin{figure}
+% \centering
+% \input{models/init-dok.tex}
+% \caption{The DOK initialization predicate.}
+% \label{init:dok}
+% \end{figure}
+
+\subsubsection{Matrix Update}
+
+% \begin{figure}
+% \centering
+% \input{models/update-dok.tex}
+% \caption{The DOK update predicate.}
+% \label{update:dok}
+% \end{figure}
+
+\subsubsection{SpMV}
