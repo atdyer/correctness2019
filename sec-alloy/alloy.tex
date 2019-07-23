@@ -1,33 +1,16 @@
-\section{Lightweight Formal Methods}
+\section{Alloy and Bounded Verification}
 \label{sec:alloy}
-
-...
-An additional aspect of lightweight formal methods is an incremental style of modeling, which tools like Alloy support by offering immediate feedback while models are being constructed: we start with a minimal set of constraints and ``grow'' them via conjunction.
-
-\subsection{Alloy}
 
 The tool used in our approach is Alloy, a declarative modeling language combining first-order logic with relational calculus and associated quantifiers and operators, along with transitive closure.  It offers rich data modeling features based on class-like structures and an automatic form of analysis that is performed within a bounded scope using a SAT solver.  For \emph{simulation}, the analyzer can be directed to look for instances satisfying a property of interest.  For \emph{checking}, it looks for an instance violating an assertion: a counterexample.  The approach is \emph{scope complete} in the sense that all cases are checked within user-specified bounds.  Alloy's logic supports three distinct styles of expression, that of predicate calculus, navigation expressions, and relational calculus.  The language used for modeling is also used for specifying properties of interest and assertions.  Alloy supports expressions with integer values and basic arithmetic operations.
 
-\subsection{Data Abstraction}
-
-Proof obligations: mathematical formula to be proven in order to ensure that a component is correct.
-
-Start example here.
-
-\subsection{Data Refinement}
-
-The process of data refinement involves removing nondeterminism, or uncertainty, from an abstract model~\cite{woodcock1996}.  While an abstract model may omit certain design choices, a refinement can resolve some of these choices, removing uncertainty and approaching the level of a concrete implementation.
+Alloy cannot check all possible cases, but instead relies on the small-scope hypothesis, refer to \figurename~\ref{pic:small}.
 
 \begin{figure}
-\begin{tikzpicture}
-\begin{tikzcd}[sep=huge]
-AS \arrow{r}[description]{AF} & AS' \\
-IS \arrow{u}[description]{\alpha} \arrow{r}[description]{IF} & IS' \arrow{u}[description]{\alpha}
-\end{tikzcd}
-\end{tikzpicture}
-\caption{TODO: An abstract state (AS) becomes new abstract state (AS') through an abstract function (AF).  An implemented state (IS) becomes a new implemented state (IS') through an implemented function (IF).  The implemented states are related to the abstract states through the abstraction function $\alpha$.}
+\includegraphics[width=\columnwidth]{images/smallscope}
+\caption{Illustration of Small Scope Hypothesis (cite)}
+\label{pic:small}
 \end{figure}
 
-Abstraction function and representation invariant discussion.
+Implicitness in specification; Alloy generates what might be viewed as input or data for operations.  This means, e.g., arbitrary sparse matrices are generated; contrast this with unit testing in which inputs must be created manually.  For numerical software, it is hard to perform `parts' of a large-scale simulation by simply extracting code... have to create `valid' data for input, populate data structures.  In alloy we describe properties required of data and Alloy generates it for us, so in some ways this is easier than testing a component of a large-scale program.
 
-Continue example with refinement here.
+Proof obligations: mathematical formula to be proven in order to ensure that a component is correct.

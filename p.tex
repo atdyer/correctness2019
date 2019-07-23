@@ -14,21 +14,30 @@
 \usetikzlibrary{positioning}
 \usetikzlibrary{cd}
 
+\acmConference[Correctness 2019]{Third International Workshop on Software Correctness for HPC Applications}{November 2019}{Denver, CO USA}
+\acmYear{2019}
+\copyrightyear{2019}
+
 % Import Alloy syntax and listings package
 \import{util/}{alloy-listings.tex}
 \import{util/}{alloy-lang.tex}
 
 \begin{document}
 
-\title{Sparse Matrices Correctness 2019 Paper}
+\title{Bounded Verification of Sparse Matrix Computations}
 \maketitle
 
-% \import{sec-intro/}{intro.tex}
-% \import{sec-litrev/}{litrev.tex}
-% \import{sec-alloy/}{alloy.tex}
-\import{sec-models/}{models.tex}
-% \import{sec-trans/}{translation.tex}
+\import{sec-intro/}{intro2.tex}
+\import{sec-alloy/}{alloy.tex}
+\import{sec-reps/}{reps.tex}
+\import{sec-ops/}{ops.tex}
+\import{sec-spmv/}{spmv.tex}
+% \import{sec-models/}{models.tex}
+\import{sec-translation/}{translation.tex}
+\import{sec-transpose/}{transpose.tex}
 % \import{sec-spmv/}{spmv.tex}
+\import{sec-litrev/}{litrev.tex}
+\import{sec-conclusion/}{conclusion.tex}
 
 \bibliographystyle{IEEEtran}
 \bibliography{IEEEabrv,bib/sparse,bib/mybib}

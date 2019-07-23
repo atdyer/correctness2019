@@ -1,0 +1,81 @@
+\section{Sparse Matrix Representations in Alloy}
+\label{sec:reps}
+
+In this section we introduce some basic modeling elements used throughout the study and describe three models of sparse matrices.  First we describe an abstract model of a mathematical matrix, leaving out all implementation details and notions of sparsity.  Then we describe two refinements of this model which introduce structure that supports a sparse representation: the ELL format and the CSR format.  Finally, we introduce the method of refinement and use it to show that the CSR format is a correct abstraction of the abstract data format.
+
+By design, Alloy provides no means of working with floating point values.  It includes integers, but in a limited scope, and so they are not useful when attempting to work with the complete integer set, as might be the case when considering values that could be stored in a sparse matrix.  This is inconsequential, however, as we only aim to reason about the structural complexities of sparse matrix formats.  Therefore, it is sufficient to create an abstract distinction between zero and non-zero values.  Our models employ a Value signature, representing any numerical value, and a Zero signature, an extension of Value, that represents the value zero.  These signatures can be found in \figurename~\ref{model:abstract}.  Depending on the scope, this creates an abstract set of values, shown in \figurename~\ref{fig:values}, that we can use to populate matrices in our models.
+
+\begin{figure}
+\begin{displaymath}
+Value = \{Zero, Value_0, Value_1, \ldots, Value_n\}
+\end{displaymath}
+\caption{The set of abstract values.}
+\label{fig:values}
+\end{figure}
+
+Throughout these models we make use of predicate overloading to define various predicates that can be applied universally.  Overloading is enabled by Alloy's type system and type checker, which allow expressions to share a name as long as there is no ambiguity when resolving types.  For example, the \texttt{range} predicate is used to generate a set of integers within some range.  It takes two forms, one which accepts a single integer, $n$, and generates the set of integers $[0,n-1]$, and one which accepts two integers, $i$ and $j$, and generates the set of integers $[i, j]$.
+
+\subsection{Abstract Sparse Matrix}
+
+We begin with an abstract model of a two-dimensional mathematical matrix, sparse or otherwise, defined by the Matrix signature as shown in \figurename~\ref{model:abstract}.  There are three fields defined on the Matrix signature representing (1) the number of rows in the matrix, (2) the number of columns in the matrix, and (3) the values and their locations in the matrix.  This model makes no assumptions about the contents or structure of the matrix, and will be the arbiter of correctness when determining if a refinement is sound.
+
+The representation invariant is specified in the predicate \texttt{repInv}.  It states that the number of rows and columns in the matrix are each greater than or equal to zero, and that the set of index pairs used to store values is the complete mapping of row indices to column indices.
+
+\begin{figure}
+\lstinputlisting[language=alloy]{models/matrix.als}
+\caption{Abstract Matrix Model}
+\label{model:abstract}
+\end{figure}
+
+\subsection{ELL Format}
+
+The ELL format, name after the ELLPACK library from which it originates, stores data in two arrays, each of size $rows\times maxnz$ where $maxnz$ is the maximum number of non-zero values that appear in any single column.  The values array stores non-zero values and the columns array stores the column indices into which those values fall.  Values and associated column indices stored at the same array index in each of the arrays.  Each row of the matrix is allotted the same amount of space within the two arrays, and rows are indexed by multiplying the row index by the values of $maxnz$.  Rows with fewer non-zero values than $maxnz$ are padded using a special value, negative one in our case.  Although it is capable of storing any sparse matrix, the ELL format is most efficient when every row has the same number of non-zero values.
+
+\begin{figure}
+\lstinputlisting[language=alloy]{models/ell.als}
+\caption{The ELL Model.}
+\label{model:ell}
+\end{figure} 
+
+Our model of the ELL format is shown in \figurename~\ref{model:ell}.  The integer values \texttt{rows}, \texttt{cols}, and \texttt{maxnz} represent the number of rows, column, and the maximum number of non-zero values, respectively.  The \texttt{vals} and \texttt{cids} fields, representing the arrays of values and column indices, are each represented using sequences.  Sequences are an Alloy construct that allow for the declaration of a field as an ordered sequence of atoms.  This idiom is a convenient way to represent arrays, and is used throughout our models as such.
+
+The representation invariant for the ELL format is specified in the \texttt{repInv} predicate.  It states that an ELL instance is a valid ELL representation if the number of rows, columns, and maximum non-zero values are greater than or equal to zero, the maximum number of non-zero values is less than or equal to the number of columns, the value and column arrays are the same length, the column array contains valid indices or padding values, no column indices are repeated within a single row, and the value zero is stored at all columns containing a placeholder.
+
+\subsection{CSR Format}
+
+The Compressed Sparse Row (CSR) format, a description of which is shown in \figurename~\ref{image:csr}, uses three arrays to store a sparse matrix, one for values and two for integers.  The value array contains non-zero values of the matrix while column indices associated with those values are stored in a separate array.  A third array stores the location in the values and column index arrays that begin each row.  We adopt the convention that the values array is named $\mathrm{A}$, the column array is named $\mathrm{JA}$, and the row index array is name $\mathrm{IA}$.
+
+\begin{figure}
+\centering
+\import{sec-reps/tikz/}{csr.tex}
+\caption{The CSR format.}
+\label{image:csr}
+\end{figure}
+
+The CSR format, making no assumptions about the sparsity structure of the matrix, is a general format capable of compressing any sparse matrix.  The storage savings for this approach is significant, requiring $2nnz+n+1$ storage locations\footnote{where $n$ is the number of rows, $m$ is the number of columns, and $nnz$ is the number of non-zero values} rather than $n \times m$.  Memory locality is improved for row access over the DOK format, but the indirect addressing steps can have an impact on performance~\cite{bai}.
+
+\begin{figure}
+\lstinputlisting[language=alloy]{models/csr.als}
+\caption{The CSR Model.}
+\label{model:csr}
+\end{figure}
+
+Our model of the CSR format is shown in \figurename~\ref{model:csr}.  The integer values \texttt{rows} and \texttt{cols} represent the number of rows and columns, respectively.  The \texttt{A} sequence of abstract values represents the value array, while the \texttt{JA} and \texttt{A} sequences of integers represent the column array and indexing array, respectively.
+
+The representation invariant for the CSR format is specified in the \texttt{repInv} predicate.  It states that a CSR instance is a valid representation of a sparse matrix if the following are true: (1) the number of rows and columns is greater than or equal to zero, (2) the first value of the \texttt{IA} array is 0 and the last value of the \texttt{IA} array is equal to the number of values in the \texttt{A} array, (3) the number of values in the \texttt{JA} array is equal to the number of values in the \texttt{A} array, (4), the number of values in the \texttt{IA} array is equal to one more than the number of rows, (5) the value zero is not stored in the matrix, (6) the values in the \texttt{IA} array are monotonically increasing, (7) all column indices are in range, (8) and there are no repeated column indices within any single row.
+
+\subsection{Correctness of Sparse Matrix Formats}
+
+Both the ELL and CSR models provide representation invariants that define the properties of a valid ELL or CSR matrix.  The question remains, however, whether these sparse formats are correct representations of an abstract matrix.  By correct, we mean that these concrete representations exhibit all of the same properties as our abstract matrix.  This notion of correctness, introduced by Hoare~\cite{} in 1972, allows one to reason about the correctness of a program that utilizes matrices without having to reason about implementation details associated with sparse matrix formats.  Furthermore, the method is employed as part of the data refinement used to develop models of sparse matrix operations in Section~\ref{sec:ops}.
+
+The notion of conformance used in the Hoare checks for the correctness of a data refinement is one of inclusion, meaning that all concrete representations must map to an abstract one.  This mapping, called an abstraction function, need not be a one-to-one mapping, and in many cases is many-to-one.  While this method of determining the correctness of a concrete data type is sound, meaning that if an abstraction function exists it follows that the concrete representation conforms to the abstract one, the inverse it not necessarily true. 
+
+\begin{figure}
+\lstinputlisting[language=alloy]{models/csr-ref.als}
+\caption{The CSR refinement check.}
+\label{model:csr-ref}
+\end{figure}
+
+The abstraction function, \texttt{alpha}, for the CSR matrix format is defined in \figurename~\ref{model:csr-ref}.  It equates the number of rows and columns in the CSR representation to the number of rows and columns in the abstract representations and builds the set of row$\rightarrow$column$\rightarrow$values using set comprehensions.  The use of set comprehensions here is deliberate.  By determining exactly the set of values in the field, we are not required to include any frame conditions.  Our experience in developing these models has been that as a model increases in complexity, so do the frame conditions, and that incorrectly implemented frame conditions are harder to catch than incorrectly implemented set comprehensions.  Therefore, the use of set comprehensions for this type of operation is less error-prone.
+
+To check within scope that the abstraction function is valid and that the CSR format is a correct refinement of the abstract matrix format, the \texttt{repValid} assertion states that for all CSR matrices, \texttt{c}, and all abstract matrices, \texttt{m}, if \texttt{c} is a valid CSR representation and maps to \texttt{m} through the abstraction function \texttt{alpha}, then it follows that \texttt{m} is a valid abstract matrix.

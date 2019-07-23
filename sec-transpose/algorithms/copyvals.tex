@@ -1,0 +1,19 @@
+\SetStartEndCondition{ }{}{}
+\SetKwProg{Fn}{def}{\string:}{}
+\SetKwFunction{Range}{range}
+\SetKw{KwTo}{in}\SetKwFor{For}{for}{\string:}{}
+\SetKwIF{If}{ElseIf}{Else}{if}{:}{elif}{else:}{}
+\SetKwFor{While}{while}{:}{fintq}
+\newcommand{\forcond}[2]{$#1$ \KwTo\Range{$#2$}}
+\SetAlgoNoEnd
+\DontPrintSemicolon
+\For{\forcond{i}{n}}{
+  \For{\forcond{k}{ia[i], ia[i+1]}}{
+    j = ja[k]\;
+    nxt = iao[j]\;
+    ao[nxt] = a[k]\;
+    jao[nxt] = i\;
+    iao[j] = next + 1\;
+  }
+}
+\BlankLine

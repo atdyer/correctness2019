@@ -1,0 +1,30 @@
+\section{Matrix Transpose}
+\label{sec:transpose}
+
+Abstract matrix transpose can be performed ``en masse'' using set comprehension.  The CSR transpose algorithm, on the other hand, involves nested loops with dependencies, shown in \figurename~\ref{algo:transpose}.
+
+\begin{figure}
+TRANSPOSE PSEUDOCODE
+\caption{CSR Transpose}
+\label{algo:transpose}
+\end{figure}
+
+Have modeled transpose using a method similar to the \texttt{kpos} method used in ELL to CSR translation that does, but have also demonstrated a way to generate a table of iteration steps -- still in development and method is being refined.
+
+The algorithm consists of four distinct steps: (1) counting of columns, (2) calculation of pointers, (3) copying of values, and (4) shifting of pointers.  An array, $iao$, evolved continuously through this process and is used in all four steps.  We are mostly concerned with the third step, as it contains an inner loop that has a dependency on the outer loop, seen in Algorithm~\ref{algorithm:transpose}.
+
+% \LinesNumbered
+\begin{algorithm}
+\input{algorithms/copyvals.tex}
+\caption{The copy values step in CSR transpose}
+\label{algorithm:transpose}
+\end{algorithm}
+% \LinesNotNumbered
+
+The first and fourth steps make use of set comprehensions, the second step uses a common modeling paradigm to generate values, but the third step requires the final method introduced in this paper.  Rather than generate a sequence of integers, as in kpos method, generate a sequence of arrays.  This method demonstrated in the \texttt{copyvals} predicate in \figurename~\ref{model:transpose}.  May move this method of generating a sequence of arrays to be included with the kpos method, depending on the final form of the table-of-iterations method.
+
+\begin{figure}
+\lstinputlisting[language=alloy]{models/transpose.als}
+\caption{CSR Transpose}
+\label{model:transpose}
+\end{figure}

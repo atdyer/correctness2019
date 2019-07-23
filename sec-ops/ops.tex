@@ -1,0 +1,34 @@
+\section{Sparse Matrix Operations in Alloy}
+\label{sec:ops}
+
+Sparse matrix operations are used extensively in scientific computation for things like solving systems of equations and calculating eigenvalues. 
+
+While sparse matrix representations are used to reduce required storage space, operations on sparse matrices are designed to be efficient in time, often packaged in libraries written in low-level imperative languages.
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}
+\centering
+\begin{tikzcd}[sep=huge]
+AS \arrow{r}[description]{A_{op}} & AS' \\
+CS \arrow{u}[description]{\alpha} \arrow{r}[description]{C_{op}} & CS' \arrow{u}[description]{\alpha}
+\end{tikzcd}
+\end{tikzpicture}
+\end{center}
+\caption{Data Refinement}
+\label{fig:procref}
+\end{figure}
+
+To validate the correctness of a sparse matrix operation, we use data refinement.  To model a data refinement in Alloy we relate the pre- and post-states of a concrete operation to the pre- and post-states of the abstract operation through the abstraction function, $\alpha$.  The diagram in \figurename~\ref{fig:procref} demonstrates this relationship.  Conceptually, this means that if we begin with some concrete representation, $CS$, we can choose to follow the arrows of the diagram in either direction and we will always end up at the same abstract state, $AS'$.  We either perform the concrete operation and apply the abstraction function to the result or we first apply the abstraction function and then perform the abstract operation.  Both paths around the diagram are equivalent.
+
+Algorithms that use sparse matrices typically have nested loop structures due to presence of array indirections embedded within sparse matrix formats, e.g. CSR.
+
+This type of structured loop presents unique challenges from a modeling perspective.  We have developed a new idiom for handling the type of bounded iteration and evolving state typical of these algorithms, which is realized in three different approaches:
+
+\begin{enumerate}
+  \item{Set comprehensions for simple cases that are easier to reason about, handling iteration ``en masse''}
+  \item{For internal state, such as indexing values or arrays, that does not evolve in a predictable manner due to either branching or some property of the looping values, using the \texttt{some} quantifier to generate the sequence of values subject to the appropriate constraints.}
+  \item{For nested dependencies in which the iterating indices of the inner loop are dependent on the iterating indices of the outer loop, generate an i$\rightarrow$k$\rightarrow$t table subject to the appropriate constraints.}
+\end{enumerate}
+
+The following sections make use of each of these methods in order of growing complexity.  Matrix-vector multiply has no time-varying state, format translation requires only the first time-varying method, and transpose makes use of the second time-varying method.

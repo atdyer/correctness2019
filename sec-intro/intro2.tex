@@ -1,0 +1,18 @@
+\section{Introduction}
+\label{sec:intro}
+
+Sparse matrix computations are central to many applications in scientific computing.  Sparse matrix data formats can be used to compress large matrices with a small number of non-zero elements into a more efficient representation.  With roots in scientific computing, their usage has become adopted across a wide range of applications, including big data and machine learning.  As such, there is a plethora of data formats capable of representing a sparse matrix, each presenting unique characteristics in terms of performance and usability.  Commonly found representations include Compressed Sparse Row (CSR), Compressed Sparse Column (CSC), Coordinate (COO), and Dictionary of Keys (DOK).  New representations and modifications to existing ones are continually being created in order to take advantage of new hardware characteristics (cite) and new architectures such as GPUs (cite).
+
+Coincident to sparse matrix representations are the operations that are performed on sparse matrices.  These range from basic operations such as matrix addition and matrix-vector multiplication to more complex ones, such as column sorting and format conversion.  Many of these operations are key components in libraries used across a wide range of applications.  For example, sparse matrix-vector multiplication is a vital operation for solving linear systems of equations or computing eigenvalues.
+
+Our own interests arose when optimizing ADCIRC, a popular large-scale ocean model, trying to assure that changes preserved correctness.  Difficult to perform manually due to long run-times... testing is difficult and incomplete.
+
+Introduce Alloy, a declarative language with automatic analysis, can perform simulations and checks... scientific software not a common application for state-based formal methods.
+
+Our first use of Alloy was in subdomain modeling, can make incremental changes to storm surge models and perform simulations at an incremental computational cost, giving huge performance gains.
+
+We are continuing work on ADCIRC++, working on internal algorithms, using new solvers, etc. and need to be able to reason about the particular representations required by solvers/algorithms.
+
+Assembly from a finite element mesh works directly on sparse matrix data structures for performance reasons, sometimes hard to ensure correct in all cases, corner cases not missed.
+
+Scope and organization of paper: Alloy and Bounded Verification, Sparse Matrix Representations, Sparse Matrix Operations, Matrix-Vector Multiplication, Format Translation, Matrix Transpose, Related Work, Conclusions.
